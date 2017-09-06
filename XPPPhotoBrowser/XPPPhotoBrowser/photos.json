@@ -1,0 +1,32 @@
+"pictures": [
+             {
+             "id": "f837f02b-3252-46a5-af59-c7d69579cb49",
+             "full": {
+             "url": "http://haul-dev.oss-cn-beijing.aliyuncs.com/img/hf/f837f02b-3252-46a5-af59-c7d69579cb49",
+             "width": 290,
+             "height": 300,
+             "format": "jpg"
+             },
+             "thumbnail": {
+             "url": "http://haul-dev.oss-cn-beijing.aliyuncs.com/img/ht/f837f02b-3252-46a5-af59-c7d69579cb49",
+             "width": 113,
+             "height": 117,
+             "format": "jpg"
+             }
+             },
+             {
+             "id": "1220171b-b3f1-49e8-a104-2d6f682d69ca",
+             "full": {
+             "url": "http://haul-dev.oss-cn-beijing.aliyuncs.com/img/hf/1220171b-b3f1-49e8-a104-2d6f682d69ca",
+             "width": 750,
+             "height": 1000,
+             "format": "jpg"
+             },
+             "thumbnail": {
+             "url": "http://haul-dev.oss-cn-beijing.aliyuncs.com/img/ht/1220171b-b3f1-49e8-a104-2d6f682d69ca",
+             "width": 112,
+             "height": 150,
+             "format": "jpg"
+             }
+             },
+]
