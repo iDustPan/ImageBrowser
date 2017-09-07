@@ -17,8 +17,6 @@ static CGFloat const kLineSpacing = 20;
 @interface XPPPhotoPreviewView()< UICollectionViewDelegateFlowLayout,UICollectionViewDelegate, UICollectionViewDataSource, XPPPhotoPreviewCellDelegate>
 
 
-
-@property (nonatomic, strong) UICollectionView *previewCollView;
 @property (nonatomic, strong) UIPageControl *pageControll;
 
 @end
@@ -28,9 +26,6 @@ static CGFloat const kLineSpacing = 20;
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor blackColor];
-        
-        
-        
     }
     return self;
 }
@@ -47,11 +42,14 @@ static CGFloat const kLineSpacing = 20;
 }
 
 - (void)previewCurrentPageAtIndex:(NSInteger)page {
+    [self layoutIfNeeded];
     self.pageControll.currentPage = page;
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:page
                                                      inSection:0];
     [self.previewCollView scrollToItemAtIndexPath:indexPath
-                                 atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+                                 atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                         animated:NO];
+    
 }
 
 - (void)setPhotosArr:(NSArray<XPPPhoto *> *)photosArr {
@@ -116,8 +114,7 @@ static CGFloat const kLineSpacing = 20;
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         _previewCollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:flowLayout];
-        _previewCollView.translatesAutoresizingMaskIntoConstraints = NO;                             
-        _previewCollView.backgroundColor = [UIColor randomColor];
+        _previewCollView.translatesAutoresizingMaskIntoConstraints = NO;
         _previewCollView.pagingEnabled = YES;
         _previewCollView.delegate = self;
         _previewCollView.dataSource = self;

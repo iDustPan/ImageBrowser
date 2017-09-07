@@ -12,6 +12,7 @@
 @protocol XPPPhotoPreviewViewDelegate;
 @interface XPPPhotoPreviewView : UIView
 
+@property (nonatomic, strong) UICollectionView *previewCollView;
 @property (nonatomic, strong) NSArray<XPPPhoto *> *photosArr;
 
 @property (nonatomic, weak) id<XPPPhotoPreviewViewDelegate> delegate;

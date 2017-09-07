@@ -36,7 +36,11 @@
         url = [NSURL URLWithString:photo.full];
     }
     UIImage *phImage = [UIImage imageNamed:@""];
-    [_defaultImageView sd_setImageWithURL:url placeholderImage:phImage];
+    [_defaultImageView sd_setImageWithURL:url
+                         placeholderImage:phImage
+                                completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                                    photo.image = image;
+    }];
 }
 
 @end

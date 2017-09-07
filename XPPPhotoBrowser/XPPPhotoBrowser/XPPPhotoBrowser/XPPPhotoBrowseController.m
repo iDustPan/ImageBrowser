@@ -14,7 +14,11 @@
 
 @interface XPPPhotoBrowseController ()<XPPPhotoPreviewViewDelegate>
 
+
+@property (nonatomic, strong) UIView *backgroundView;
 @property (nonatomic, strong) XPPPhotoPreviewView *previewView;
+
+@property (nonatomic, strong) UIImageView *snapshotView;
 
 @property (nonatomic, assign) CGRect originalFrame;
 
@@ -32,28 +36,41 @@
     return self;
 }
 
-- (void)previewPhotos:(NSArray<XPPPhoto *> *)photos fromView:(UIView *)view fromFrame:(CGRect)frame currentPage:(NSInteger)page {
-    UIWindow *keyWindow = [UIApplication sharedApplication].delegate.window;
-    _originalFrame = frame;
-    view.frame = frame;
-    _previewView.frame = frame;
-    _previewView.photosArr = photos;
-    [keyWindow addSubview:_previewView];
+- (void)previewPhotos:(NSArray<XPPPhoto *> *)photos fromFrame:(CGRect)frame currentPage:(NSInteger)page {
     
-    [keyWindow addSubview:view];
+    _originalFrame = frame;
+    XPPPhoto *currentPhoto = photos[page];
+    UIWindow *keyWindow = [UIApplication sharedApplication].delegate.window;
+    NSLog(@"%@", NSStringFromCGSize(currentPhoto.imgSize));
+    _backgroundView = [UIView new];
+    _backgroundView.backgroundColor = [UIColor blackColor];
+    _backgroundView.alpha = 0;
+    _backgroundView.frame = keyWindow.bounds;
+    [keyWindow addSubview:_backgroundView];
+    
+    _snapshotView = [[UIImageView alloc] initWithImage:currentPhoto.image];
+    _snapshotView.contentMode = UIViewContentModeScaleAspectFill;
+    _snapshotView.clipsToBounds = YES;
+    _snapshotView.frame = frame;
+    [keyWindow addSubview:_snapshotView];
+    
+    _previewView.photosArr = photos;
+    _previewView.frame = keyWindow.bounds;
+    _previewView.hidden = YES;
+    [keyWindow addSubview:_previewView];
+    [_previewView previewCurrentPageAtIndex:page];
+    
     [UIView animateWithDuration:0.35f delay:0 usingSpringWithDamping:1.0f initialSpringVelocity:1.0f options:(UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionLayoutSubviews) animations:^{
-        
-        XPPPhoto *currentPhoto = photos[page];
         
         CGFloat imageWidth = keyWindow.bounds.size.width;
         CGFloat imageHeight = imageWidth * currentPhoto.imageRatio;
         CGFloat imageY = (keyWindow.bounds.size.height - imageHeight) * 0.5;
-        view.frame = CGRectMake(0, imageY, imageWidth, imageHeight);
-        _previewView.frame = keyWindow.bounds;
+        _snapshotView.frame = CGRectMake(0, imageY, imageWidth, imageHeight);
+        _backgroundView.alpha = 1.0f;
     } completion:^(BOOL finished) {
-        [view removeFromSuperview];
-        
-        [_previewView previewCurrentPageAtIndex:page];
+        _snapshotView.hidden = YES;
+        _previewView.hidden = NO;
+        [keyWindow bringSubviewToFront:_previewView];
     }];
 }
 
@@ -62,13 +79,22 @@
 }
 
 - (void)dismissPreviewView {
-    if (_previewView && _previewView.window) {
-        [UIView animateWithDuration:0.35f delay:0 usingSpringWithDamping:1.0f initialSpringVelocity:1.0f options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionLayoutSubviews) animations:^{
-            _previewView.frame = _originalFrame;
-        } completion:^(BOOL finished) {
-            [_previewView removeFromSuperview];
-        }];
-    }
+    _snapshotView.hidden = NO;
+    _previewView.hidden = YES;
+    [UIView animateWithDuration:0.35f
+                          delay:0
+         usingSpringWithDamping:1.0f
+          initialSpringVelocity:1.0f
+                        options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionLayoutSubviews)
+                     animations:^{
+                              _snapshotView.frame = _originalFrame;
+                              _backgroundView.alpha = 0;
+                          } completion:^(BOOL finished) {
+                              _backgroundView.hidden = YES;
+                              [_previewView removeFromSuperview];
+                              [_snapshotView removeFromSuperview];
+                          }];
+
 }
 
 

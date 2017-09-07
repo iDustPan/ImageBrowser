@@ -109,7 +109,7 @@ UICollectionViewDelegateFlowLayout
     CGRect cellABSFrame = [window convertRect:cellFrame fromView:self];
     _browseControlelr = [[XPPPhotoBrowseController alloc] init];
     
-    [_browseControlelr previewPhotos:_photos fromView:snapView fromFrame:cellABSFrame currentPage:indexPath.item];
+    [_browseControlelr previewPhotos:_photos fromFrame:cellABSFrame currentPage:indexPath.item];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {

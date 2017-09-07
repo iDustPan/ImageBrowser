@@ -12,6 +12,6 @@
 
 @interface XPPPhotoBrowseController : NSObject
 
-- (void)previewPhotos:(NSArray<XPPPhoto *>*)photos fromView:(UIView *)view  fromFrame:(CGRect)frame currentPage:(NSInteger)page;
+- (void)previewPhotos:(NSArray<XPPPhoto *>*)photos fromFrame:(CGRect)frame currentPage:(NSInteger)page;
 
 @end

@@ -65,17 +65,17 @@
     contentSize.height += frame.origin.y * 2;
     
     self.scrollView.contentSize = contentSize;
-    
 }
 
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
+    [self layoutIfNeeded];
     self.scrollView.frame = self.bounds;
-    CGSize imgSize = self.imageView.image.size;
+    CGSize imgSize = _photo.imgSize;
+    NSLog(@"%@", NSStringFromCGSize(imgSize));
     if (CGSizeEqualToSize(imgSize, CGSizeZero)) {
         NSLog(@"图片尺寸为0");
-        return;
+        return [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
     }
     CGFloat imgW = self.scrollView.bounds.size.width;
     CGFloat imgH = imgSize.height * imgW / imgSize.width;
@@ -94,6 +94,8 @@
     //    }
     self.imageView.frame = newFrame;
     self.scrollView.contentSize = newFrame.size;
+
+    return [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
 }
 
 - (void)doubleClickForZooming:(UITapGestureRecognizer *)tap {
