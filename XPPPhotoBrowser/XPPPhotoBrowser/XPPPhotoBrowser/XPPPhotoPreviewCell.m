@@ -54,16 +54,6 @@
     }
 }
 
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-//    CGRect frame = view.frame;
-//    NSLog(@"%@", NSStringFromCGRect(frame));
-//    CGSize contentSize = self.scrollView.contentSize;
-//    contentSize.height += frame.origin.y * 2;
-//    
-//    self.scrollView.contentSize = contentSize;
-}
-
-
 - (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
     [self centerImageViewToScrollView];
     return [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
@@ -74,8 +64,16 @@
     self.scrollView.frame = self.bounds;
     self.imageView.frame = self.scrollView.bounds;
     CGRect newFrame = self.imageView.frame;
-    self.scrollView.contentSize = newFrame.size;
-    self.imageView.center = CGPointMake(self.scrollView.contentSize.width * 0.5, self.scrollView.contentSize.height * 0.5);
+    
+    CGFloat imageH = _photo.imageRatio * self.imageView.bounds.size.width;
+    if (imageH > self.scrollView.bounds.size.height) {
+        newFrame.size.height = imageH;
+        self.imageView.frame = newFrame;
+        self.scrollView.contentSize = self.imageView.bounds.size;
+        self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, self.scrollView.contentSize.height * 0.5);
+        [self.scrollView setContentOffset:CGPointMake(0, newFrame.size.height * 0.5 - self.scrollView.bounds.size.height * 0.5) animated:NO];
+    }
+    self.scrollView.contentSize = self.imageView.bounds.size;
 }
 
 - (void)doubleClickForZooming:(UITapGestureRecognizer *)tap {

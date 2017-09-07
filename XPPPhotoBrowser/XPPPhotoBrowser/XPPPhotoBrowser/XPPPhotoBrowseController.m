@@ -41,7 +41,6 @@
     _originalFrame = frame;
     XPPPhoto *currentPhoto = photos[page];
     UIWindow *keyWindow = [UIApplication sharedApplication].delegate.window;
-    NSLog(@"%@", NSStringFromCGSize(currentPhoto.imgSize));
     _backgroundView = [UIView new];
     _backgroundView.backgroundColor = [UIColor blackColor];
     _backgroundView.alpha = 0;

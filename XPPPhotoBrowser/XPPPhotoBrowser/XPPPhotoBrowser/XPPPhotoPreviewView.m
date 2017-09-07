@@ -12,7 +12,7 @@
 #import "XPPPhoto.h"
 
 
-static CGFloat const kLineSpacing = 20;
+static CGFloat const kLineSpacing = 40;
 
 @interface XPPPhotoPreviewView()< UICollectionViewDelegateFlowLayout,UICollectionViewDelegate, UICollectionViewDataSource, XPPPhotoPreviewCellDelegate>
 
