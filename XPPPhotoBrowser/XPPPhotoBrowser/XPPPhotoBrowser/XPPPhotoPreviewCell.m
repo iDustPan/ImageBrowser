@@ -28,7 +28,7 @@
     NSString *cacheKey = [[SDWebImageManager sharedManager] cacheKeyForURL:[NSURL URLWithString:photo.thumb]];
     UIImage *img = [[SDWebImageManager sharedManager].imageCache imageFromCacheForKey:cacheKey];
     
-    [self.imageView sd_setImageWithPreviousCachedImageWithURL:[NSURL URLWithString:_photo.full] placeholderImage:img options:SDWebImageProgressiveDownload progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+    [self.imageView sd_setImageWithPreviousCachedImageWithURL:[NSURL URLWithString:_photo.thumb] placeholderImage:img options:SDWebImageProgressiveDownload progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
         
     } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
         
@@ -40,15 +40,11 @@
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    
     if (scrollView.zoomScale > 1) {
-        CGRect frame = self.imageView.frame;
-        [scrollView setContentOffset:CGPointMake(scrollView.contentSize.width / 4, scrollView.contentSize.height / 4)];
-        
-        
+        self.imageView.center = CGPointMake(scrollView.contentSize.width * 0.5, scrollView.contentSize.height * 0.5);
     }else{
-        
-        
-        
+        self.imageView.center = scrollView.center;
     }
 }
 
@@ -59,55 +55,35 @@
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-    CGRect frame = view.frame;
-    NSLog(@"%@", NSStringFromCGRect(frame));
-    CGSize contentSize = self.scrollView.contentSize;
-    contentSize.height += frame.origin.y * 2;
-    
-    self.scrollView.contentSize = contentSize;
+//    CGRect frame = view.frame;
+//    NSLog(@"%@", NSStringFromCGRect(frame));
+//    CGSize contentSize = self.scrollView.contentSize;
+//    contentSize.height += frame.origin.y * 2;
+//    
+//    self.scrollView.contentSize = contentSize;
 }
 
 
 - (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
-    [self layoutIfNeeded];
-    self.scrollView.frame = self.bounds;
-    CGSize imgSize = _photo.imgSize;
-    NSLog(@"%@", NSStringFromCGSize(imgSize));
-    if (CGSizeEqualToSize(imgSize, CGSizeZero)) {
-        NSLog(@"图片尺寸为0");
-        return [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
-    }
-    CGFloat imgW = self.scrollView.bounds.size.width;
-    CGFloat imgH = imgSize.height * imgW / imgSize.width;
-    self.scrollView.frame = self.bounds;
-    
-    CGRect newFrame = self.imageView.frame;
-    //    if (imgSize.width >= imgSize.height) {
-    newFrame.size.width = imgW;
-    newFrame.size.height = imgH;
-    newFrame.origin.x = 0;
-    newFrame.origin.y = self.scrollView.center.y - imgH * 0.5;
-    //    }else{
-    //        newFrame.origin = CGPointMake(0, 0);
-    //        newFrame.size.width = imgW;
-    //        newFrame.size.height = imgSize.height * imgW / imgSize.width;
-    //    }
-    self.imageView.frame = newFrame;
-    self.scrollView.contentSize = newFrame.size;
-
+    [self centerImageViewToScrollView];
     return [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
+}
+
+- (void)centerImageViewToScrollView {
+    
+    self.scrollView.frame = self.bounds;
+    self.imageView.frame = self.scrollView.bounds;
+    CGRect newFrame = self.imageView.frame;
+    self.scrollView.contentSize = newFrame.size;
+    self.imageView.center = CGPointMake(self.scrollView.contentSize.width * 0.5, self.scrollView.contentSize.height * 0.5);
 }
 
 - (void)doubleClickForZooming:(UITapGestureRecognizer *)tap {
     if (self.scrollView.zoomScale > 1.0f) {
-        
-        
         [self.scrollView setZoomScale:1.0f animated:YES];
     }else{
         [self.scrollView setZoomScale:2.0f animated:YES];
-        
         _tapPoint = [tap locationInView:self.imageView];
-        
     }
 }
 
@@ -150,6 +126,8 @@
         _scrollView.maximumZoomScale = 2.0f;
         _scrollView.minimumZoomScale = 1.0f;
         _scrollView.backgroundColor = [UIColor blackColor];
+        _scrollView.showsVerticalScrollIndicator = NO;
+        _scrollView.showsHorizontalScrollIndicator = NO;
         [self addSubview:_scrollView];
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickForDismiss)];
         singleTap.numberOfTapsRequired = 1;
@@ -161,7 +139,7 @@
 - (UIImageView *)imageView {
     if (!_imageView) {
         _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView.contentMode = UIViewContentModeScaleAspectFit;
         _imageView.userInteractionEnabled = YES;
         _imageView.multipleTouchEnabled = YES;
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickForDismiss)];
