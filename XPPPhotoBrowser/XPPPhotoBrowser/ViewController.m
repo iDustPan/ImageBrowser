@@ -44,18 +44,39 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     XPPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"reuseCell" forIndexPath:indexPath];
-    NSArray *photos = @[
-                        @"https://ae01.alicdn.com/kf/HTB1H.n8PXXXXXbcXpXXq6xXFXXX1/-font-b-Sexy-b-font-font-b-Girls-b-font-Women-Summer-Sleeveless-Spaghetti-Straps.jpg",
-                        @"http://www.chinajinci.com/uploadfile/2011/0422/20110422110403873.jpg",
-                        @"https://media3.giphy.com/media/af2dfzlfxxdok/200_s.gif",
-                        @"https://image.winudf.com/v2/image/Y29tLmFtYXRldXIuc2V4eWhvdGdpcmxfc2NyZWVuc2hvdHNfMl8xMjNiYmQwMQ/screen-2.jpg?h=355&fakeurl=1&type=.jpg",
-                        @"https://www.dhresource.com/albu_1026794021_00-1.0x0/wholesale-hot-striped-bikini-women-39-s-3pcs.jpg",
-                        @"https://ae01.alicdn.com/kf/HTB1H.n8PXXXXXbcXpXXq6xXFXXX1/-font-b-Sexy-b-font-font-b-Girls-b-font-Women-Summer-Sleeveless-Spaghetti-Straps.jpg",
-                        @"https://media3.giphy.com/media/af2dfzlfxxdok/200_s.gif",
-                        @"http://www.my10e.com.cn/UploadFile/image/20130117/20130117143711_7968.jpg",
-                        @"https://www.dhresource.com/albu_1026794021_00-1.0x0/wholesale-hot-striped-bikini-women-39-s-3pcs.jpg"
-                        
-                        ];
+    NSArray *photos;
+    if (indexPath.row % 2 == 0) {
+        photos = @[
+                   @"https://ae01.alicdn.com/kf/HTB1H.n8PXXXXXbcXpXXq6xXFXXX1/-font-b-Sexy-b-font-font-b-Girls-b-font-Women-Summer-Sleeveless-Spaghetti-Straps.jpg",
+                   @"http://www.chinajinci.com/uploadfile/2011/0422/20110422110403873.jpg",
+                   @"https://media3.giphy.com/media/af2dfzlfxxdok/200_s.gif",
+                   @"https://image.winudf.com/v2/image/Y29tLmFtYXRldXIuc2V4eWhvdGdpcmxfc2NyZWVuc2hvdHNfMl8xMjNiYmQwMQ/screen-2.jpg?h=355&fakeurl=1&type=.jpg",
+                   @"https://www.dhresource.com/albu_1026794021_00-1.0x0/wholesale-hot-striped-bikini-women-39-s-3pcs.jpg"
+                   
+                   ];
+    }else if (indexPath.row % 3 == 0) {
+        photos = @[
+                   @"https://ae01.alicdn.com/kf/HTB1H.n8PXXXXXbcXpXXq6xXFXXX1/-font-b-Sexy-b-font-font-b-Girls-b-font-Women-Summer-Sleeveless-Spaghetti-Straps.jpg",
+                   @"http://www.chinajinci.com/uploadfile/2011/0422/20110422110403873.jpg",
+                   @"https://media3.giphy.com/media/af2dfzlfxxdok/200_s.gif",
+                   @"http://www.my10e.com.cn/UploadFile/image/20130117/20130117143711_7968.jpg",
+                   @"https://www.dhresource.com/albu_1026794021_00-1.0x0/wholesale-hot-striped-bikini-women-39-s-3pcs.jpg"
+                   
+                   ];
+    }else{
+        photos = @[
+                   @"https://ae01.alicdn.com/kf/HTB1H.n8PXXXXXbcXpXXq6xXFXXX1/-font-b-Sexy-b-font-font-b-Girls-b-font-Women-Summer-Sleeveless-Spaghetti-Straps.jpg",
+                   @"http://www.chinajinci.com/uploadfile/2011/0422/20110422110403873.jpg",
+                   @"https://media3.giphy.com/media/af2dfzlfxxdok/200_s.gif",
+                   @"https://image.winudf.com/v2/image/Y29tLmFtYXRldXIuc2V4eWhvdGdpcmxfc2NyZWVuc2hvdHNfMl8xMjNiYmQwMQ/screen-2.jpg?h=355&fakeurl=1&type=.jpg",
+                   @"https://www.dhresource.com/albu_1026794021_00-1.0x0/wholesale-hot-striped-bikini-women-39-s-3pcs.jpg",
+                   @"https://ae01.alicdn.com/kf/HTB1H.n8PXXXXXbcXpXXq6xXFXXX1/-font-b-Sexy-b-font-font-b-Girls-b-font-Women-Summer-Sleeveless-Spaghetti-Straps.jpg",
+                   @"https://media3.giphy.com/media/af2dfzlfxxdok/200_s.gif",
+                   @"http://www.my10e.com.cn/UploadFile/image/20130117/20130117143711_7968.jpg",
+                   @"https://www.dhresource.com/albu_1026794021_00-1.0x0/wholesale-hot-striped-bikini-women-39-s-3pcs.jpg"
+                   
+                   ];
+    }
     cell.photos = photos;
     return cell;
 }

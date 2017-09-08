@@ -92,8 +92,11 @@ static CGFloat const kLineSpacing = 40;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(clickImageForDismiss)]) {
-        [self.delegate clickImageForDismiss];
+    XPPPhotoPreviewCell *cell = (XPPPhotoPreviewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(clickPhotofromFrame:atIndexPath:)]) {
+        
+        CGRect imgFrame = [cell.superview convertRect:cell.imageView.frame toView:nil];
+        [self.delegate clickPhotofromFrame:imgFrame atIndexPath:indexPath];
     }
 }
 
@@ -103,8 +106,10 @@ static CGFloat const kLineSpacing = 40;
 }
 
 - (void)previewCellDidEndPreview:(XPPPhotoPreviewCell *)cell {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(clickImageForDismiss)]) {
-        [self.delegate clickImageForDismiss];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(clickPhotofromFrame:atIndexPath:)]) {
+        NSIndexPath *indexPath = [self.previewCollView indexPathForCell:cell];
+        CGRect imgFrame = [cell.superview convertRect:cell.imageView.frame toView:nil];
+        [self.delegate clickPhotofromFrame:imgFrame atIndexPath:indexPath];
     }
 }
 

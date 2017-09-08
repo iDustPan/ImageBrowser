@@ -21,7 +21,7 @@
 @property (nonatomic, strong) UIImageView *snapshotView;
 
 @property (nonatomic, assign) CGRect originalFrame;
-
+@property (nonatomic, strong) NSArray<XPPPhoto *> *photos;
 @end
 
 @implementation XPPPhotoBrowseController
@@ -37,7 +37,9 @@
 }
 
 - (void)previewPhotos:(NSArray<XPPPhoto *> *)photos fromFrame:(CGRect)frame currentPage:(NSInteger)page {
-    
+    self.photos = photos;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:page inSection:0];
+    frame = [self.delegate originalFrameAtIndexPath:indexPath];
     _originalFrame = frame;
     XPPPhoto *currentPhoto = photos[page];
     UIWindow *keyWindow = [UIApplication sharedApplication].delegate.window;
@@ -73,11 +75,14 @@
     }];
 }
 
-- (void)clickImageForDismiss {
-    [self dismissPreviewView];
+- (void)clickPhotofromFrame:(CGRect)frame atIndexPath:(NSIndexPath *)indexPath {
+    
+    _snapshotView.image = self.photos[indexPath.item].image;
+    CGRect toFrame = [self.delegate originalFrameAtIndexPath:indexPath];
+    [self dismissPreviewViewFrame:frame toFrame:toFrame];
 }
 
-- (void)dismissPreviewView {
+- (void)dismissPreviewViewFrame:(CGRect)frame toFrame:(CGRect)toFrame {
     _snapshotView.hidden = NO;
     _previewView.hidden = YES;
     [UIView animateWithDuration:0.35f
@@ -86,7 +91,7 @@
           initialSpringVelocity:1.0f
                         options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionLayoutSubviews)
                      animations:^{
-                              _snapshotView.frame = _originalFrame;
+                              _snapshotView.frame = toFrame;
                               _backgroundView.alpha = 0;
                           } completion:^(BOOL finished) {
                               _backgroundView.hidden = YES;

@@ -10,7 +10,17 @@
 
 @class XPPPhoto;
 
+@protocol XPPPhotoBrowseControllerDelegate <NSObject>
+
+@required;
+- (CGRect)originalFrameAtIndexPath:(NSIndexPath *)indexPath;
+
+@end
+
+
 @interface XPPPhotoBrowseController : NSObject
+
+@property (nonatomic, weak) id<XPPPhotoBrowseControllerDelegate> delegate;
 
 - (void)previewPhotos:(NSArray<XPPPhoto *>*)photos fromFrame:(CGRect)frame currentPage:(NSInteger)page;
 

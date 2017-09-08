@@ -20,7 +20,8 @@ static CGFloat const kDefaultInteriSpacing = 6;
 @interface XPPPhotoView ()<
 UICollectionViewDataSource,
 UICollectionViewDelegate,
-UICollectionViewDelegateFlowLayout
+UICollectionViewDelegateFlowLayout,
+XPPPhotoBrowseControllerDelegate
 >
 
 @property (nonatomic, strong) UICollectionView *photosView;
@@ -102,14 +103,17 @@ UICollectionViewDelegateFlowLayout
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    XPPDefaultPhotoCell *cell = (XPPDefaultPhotoCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    UIView *snapView  = [cell snapshotViewAfterScreenUpdates:YES];
-    CGRect cellFrame = [collectionView.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath].frame;
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
-    CGRect cellABSFrame = [window convertRect:cellFrame fromView:self];
-    _browseControlelr = [[XPPPhotoBrowseController alloc] init];
     
-    [_browseControlelr previewPhotos:_photos fromFrame:cellABSFrame currentPage:indexPath.item];
+    _browseControlelr = [[XPPPhotoBrowseController alloc] init];
+    _browseControlelr.delegate = self;
+    [_browseControlelr previewPhotos:_photos fromFrame:CGRectZero currentPage:indexPath.item];
+}
+
+- (CGRect)originalFrameAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell *cell = [self.photosView cellForItemAtIndexPath:indexPath];
+    CGRect cellFrame = [self.photosView.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath].frame;
+    CGRect cellABSFrame = [cell.superview convertRect:cellFrame toView:nil];
+    return cellABSFrame;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {

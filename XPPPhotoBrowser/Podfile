@@ -5,4 +5,5 @@ target 'XPPPhotoBrowser' do
 pod 'SDWebImage'
 pod 'JSONModel', '~> 1.7.0'
 pod 'Masonry'
+
 end

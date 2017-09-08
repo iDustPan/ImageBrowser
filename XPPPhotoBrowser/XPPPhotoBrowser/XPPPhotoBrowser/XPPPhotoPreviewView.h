@@ -23,6 +23,6 @@
 
 @protocol XPPPhotoPreviewViewDelegate <NSObject>
 
-- (void)clickImageForDismiss;
+- (void)clickPhotofromFrame:(CGRect)frame atIndexPath:(NSIndexPath *)indexPath;
 
 @end

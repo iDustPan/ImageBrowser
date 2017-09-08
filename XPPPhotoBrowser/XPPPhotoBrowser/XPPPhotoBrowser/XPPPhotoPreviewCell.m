@@ -13,7 +13,6 @@
 @interface XPPPhotoPreviewCell ()<UIScrollViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIActionSheet *sheet;
 @property (nonatomic, assign) CGPoint tapPoint;
 
@@ -24,15 +23,18 @@
 
 - (void)setPhoto:(XPPPhoto *)photo {
     _photo = photo;
+
     
-    NSString *cacheKey = [[SDWebImageManager sharedManager] cacheKeyForURL:[NSURL URLWithString:photo.thumb]];
-    UIImage *img = [[SDWebImageManager sharedManager].imageCache imageFromCacheForKey:cacheKey];
-    
-    [self.imageView sd_setImageWithPreviousCachedImageWithURL:[NSURL URLWithString:_photo.thumb] placeholderImage:img options:SDWebImageProgressiveDownload progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-        
-    } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-        
-    }];
+    self.imageView.image = photo.image;
+//    NSString *cacheKey = [[SDWebImageManager sharedManager] cacheKeyForURL:[NSURL URLWithString:photo.thumb]];
+//    UIImage *img = [[SDWebImageManager sharedManager].imageCache imageFromCacheForKey:cacheKey];
+//    
+//    [self.imageView sd_setImageWithPreviousCachedImageWithURL:[NSURL URLWithString:_photo.thumb] placeholderImage:img options:SDWebImageProgressiveDownload progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+//        
+//    } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+//    }];
+//    
+    [self layoutIfNeeded];
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
@@ -40,7 +42,6 @@
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    
     if (scrollView.zoomScale > 1) {
         self.imageView.center = CGPointMake(scrollView.contentSize.width * 0.5, scrollView.contentSize.height * 0.5);
     }else{
@@ -54,26 +55,32 @@
     }
 }
 
-- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.scrollView.frame = self.contentView.bounds;
+    self.imageView.frame = self.scrollView.bounds;
+    self.scrollView.contentSize = self.scrollView.bounds.size;
     [self centerImageViewToScrollView];
-    return [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    self.imageView.image = nil;
+    self.scrollView.contentSize = CGSizeZero;
+    self.imageView.frame = self.bounds;
 }
 
 - (void)centerImageViewToScrollView {
-    
-    self.scrollView.frame = self.bounds;
-    self.imageView.frame = self.scrollView.bounds;
-    CGRect newFrame = self.imageView.frame;
-    
-    CGFloat imageH = _photo.imageRatio * self.imageView.bounds.size.width;
+    CGFloat imageH = ceilf(_photo.imageRatio * self.imageView.bounds.size.width);
     if (imageH > self.scrollView.bounds.size.height) {
+        CGRect newFrame = self.imageView.frame;
         newFrame.size.height = imageH;
         self.imageView.frame = newFrame;
+        
         self.scrollView.contentSize = self.imageView.bounds.size;
         self.imageView.center = CGPointMake(self.scrollView.bounds.size.width * 0.5, self.scrollView.contentSize.height * 0.5);
-        [self.scrollView setContentOffset:CGPointMake(0, newFrame.size.height * 0.5 - self.scrollView.bounds.size.height * 0.5) animated:NO];
+        [self.scrollView setContentOffset:CGPointMake(0, (newFrame.size.height - self.scrollView.bounds.size.height) * 0.5) animated:NO];
     }
-    self.scrollView.contentSize = self.imageView.bounds.size;
 }
 
 - (void)doubleClickForZooming:(UITapGestureRecognizer *)tap {
@@ -81,7 +88,6 @@
         [self.scrollView setZoomScale:1.0f animated:YES];
     }else{
         [self.scrollView setZoomScale:2.0f animated:YES];
-        _tapPoint = [tap locationInView:self.imageView];
     }
 }
 
@@ -126,7 +132,7 @@
         _scrollView.backgroundColor = [UIColor blackColor];
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
-        [self addSubview:_scrollView];
+        [self.contentView addSubview:_scrollView];
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickForDismiss)];
         singleTap.numberOfTapsRequired = 1;
         [_scrollView addGestureRecognizer:singleTap];
@@ -140,6 +146,7 @@
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
         _imageView.userInteractionEnabled = YES;
         _imageView.multipleTouchEnabled = YES;
+        
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickForDismiss)];
         singleTap.numberOfTapsRequired = 1;
         [_imageView addGestureRecognizer:singleTap];

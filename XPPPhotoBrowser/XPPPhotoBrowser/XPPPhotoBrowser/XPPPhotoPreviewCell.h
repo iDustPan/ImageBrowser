@@ -14,6 +14,8 @@
 
 @interface XPPPhotoPreviewCell : UICollectionViewCell
 
+@property (nonatomic, strong) UIImageView *imageView;
+
 @property (nonatomic, strong) XPPPhoto *photo;
 
 @property (nonatomic, weak) id<XPPPhotoPreviewCellDelegate> delegate;
