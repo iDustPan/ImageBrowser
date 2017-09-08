@@ -49,6 +49,14 @@
     }
 }
 
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+    if (scrollView.zoomScale > 1) {
+        self.imageView.center = CGPointMake(scrollView.contentSize.width * 0.5, scrollView.contentSize.height * 0.5);
+    }else{
+        self.imageView.center = scrollView.center;
+    }
+}
+
 - (void)clickForDismiss {
     if (self.delegate && [self.delegate respondsToSelector:@selector(previewCellDidEndPreview:)]) {
         [self.delegate previewCellDidEndPreview:self];
@@ -68,6 +76,11 @@
     self.imageView.image = nil;
     self.scrollView.contentSize = CGSizeZero;
     self.imageView.frame = self.bounds;
+}
+
+- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
+    [self centerImageViewToScrollView];
+    return [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
 }
 
 - (void)centerImageViewToScrollView {
